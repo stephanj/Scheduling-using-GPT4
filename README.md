@@ -172,7 +172,7 @@ Create me a conference schedule with following constraints:
 
 ### Hallucinations
 
-Creates new schedule slots which were not defined
+Creates new schedule slots AND TALKS which were not defined
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-4.png)
 
