@@ -1,6 +1,6 @@
 # Scheduling a conference using GPT-4
 
-Exploring if GPT-4 can generate a conference schedule using constraints.  For the moment without success 🥹
+Exploring if GPT-4 can generate a conference schedule using constraints.  ***For the moment without success*** 🥹
 
 I've taken the public available [VoxxedDays Zurich](https://voxxeddays.com/zurich/schedule/) conference schedule details including the accepted talks.
 
@@ -27,7 +27,7 @@ HIGH CONSTRAINTS:
 MEDIUM CONSTRAINTS:
 1. Use markdown to list the generated schedule 
 
-## The schedule info in CSV format
+## The schedule info (CSV)
 
 ```
 "from hour";"to hour";"session type";"room name"
@@ -57,7 +57,7 @@ MEDIUM CONSTRAINTS:
 "16:20";"17:05";Conference;Room 7
 ```
 
-## The talks to schedule in CSV format
+## The talks to schedule (CSV)
 
 ```
 "Talk ID";"Talk Title";"Audience Level";"Talk Sumamry";"Track Name";"Speaker Availability days";"Available from";"Available to";"Speaker names"
