@@ -4,6 +4,16 @@ Exploring if GPT-4 can generate a conference schedule using constraints.  For th
 
 I've taken the public available [VoxxedDays Zurich](https://voxxeddays.com/zurich/schedule/) conference schedule details including the accepted talks.
 
+## The Goal
+Generate the "perfect" schedule using GPT.  
+![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/VoxxedDaysZurich.png)
+
+## Current situation
+
+We currently use OptaPlanner to generate the schedule using different constraints.  More details about this approach can be seen in this Devoxx presentation.
+
+[![Schedule Automation](https://img.youtube.com/vi/GnnMHkY6vKk/0.jpg)](https://www.youtube.com/watch?v=GnnMHkY6vKk)
+
 ## The constraints
 
 HIGH CONSTRAINTS:
