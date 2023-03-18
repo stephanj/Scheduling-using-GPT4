@@ -1,4 +1,4 @@
-# Scheduling using GPT-4
+# Scheduling a conference using GPT-4
 
 Exploring if GPT-4 can generate a conference schedule using constraints.  For the moment without success 🥹
 
