@@ -148,12 +148,23 @@ Create me a conference schedule with following constraints:
 
 ## The results
 
-### Generation stops with error
+### Generation error
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-1.png)
+
+### Generation stop prematurely
+
+![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-3.png)
 
 ### Doesn't follow constraints
 
 ![Constraints violation](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-2.png)
+
+### Hallucinations
+
+Creates new schedule slots which were not defined
+
+![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-4.png)
+
 
 
