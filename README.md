@@ -162,7 +162,7 @@ Create me a conference schedule with following constraints:
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-1.png)
 
-### Generation stop prematurely
+### Generation stops prematurely
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-3.png)
 
