@@ -347,9 +347,10 @@ sortedTalks = [
 
 Using the following GPT prompt with a secret context (for now) we get the expected result:
 
-| Create a 6x4 matrix where each talk is listed in the order as they are provided per column. 
-| In each matrix row a talk id can not be from the same track.  
+"Create a 6x4 matrix where each talk is listed in the order as they are provided per column. 
+ In each matrix row a talk id can not be from the same track."
 
+Generated the following "perfect" schedule 🥳
 
 ![The schedule](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/perfectSchedule.jpeg)
 
