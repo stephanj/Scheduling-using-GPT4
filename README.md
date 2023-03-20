@@ -178,7 +178,7 @@ Creates new schedule slots AND TALKS which were not defined
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-4.png)
 
 
-## Chain prompting approach
+## Chained prompting approach
 
 In this approach I have grouped all the talks per track and asked GPT to suggest an optimal order for the talks based on the semantic meaning of the title and summary columns.  
 
@@ -199,39 +199,7 @@ The output per track was as follows :
     Java: 4945, 4931, 4929, 5456, 5261
     Security: 5298, 5268 
 
-This was generated using a python app src/schedular.py 
-
-You can run the python app as follows: 
-
-``` 
-   cd src
-```
-
-Store your OPENAI_API_KEY in an .env file under the src directory 
-
-``` 
-OPENAI_API_KEY="sk-........" 
-``` 
-
-``` 
-    cd src
-    pip3 install -r requirements    
-```    
-
-Of course it's better to use conda so you can isolate the dependencies
-
-``` 
-    conda create --name schedule
-    conda activate schedule
-```    
-
-now run the python app
-
-``` 
- python3 schedular.py 
-```
-
-this will produce the following output:
+Per track the suggested GPT5 output was as follows:
 
 ``` 
 ---------------------------------------------------
