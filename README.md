@@ -227,12 +227,10 @@ For now, I manually took the suggested talks and copied them in a GPT-4 prompt:
 ```
 Create me a conference schedule with following constraints: 
 1. HIGH CONSTRAINT: Respect the order of the talk ids.  First id needs to be scheduled first etc. 
-2. HIGH CONSTRAINT: Use the talk summary to decide which talks should follow each other 
-3. HIGH CONSTRAINT: Don't have the same tracks at the same time. 
-4. HIGH CONSTRAINT: A speaker can't speak at different rooms during the same time. 
-5. List the talk id, from/to schedule time, room name, track name 
-6. Only use the listed talks! 
-7. Use markdown to list the generated schedule 
+2. HIGH CONSTRAINT: Don't have the same tracks at the same time. 
+3. List the talk id, from/to schedule time, room name, track name 
+4. Only use the listed talks! 
+5. Use markdown to list the generated schedule 
 
 The schedule to populate is :
 
@@ -276,9 +274,12 @@ The ordered talk ids per track:
 
 ```
 
-The output was a very acceptable schedule as shown below.
+At least now GPT4 created a schedule following the order of the talks per track.
 
 ![Suggested schedule](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/gpt4-schedule.png)
+
+However I've noticed that the constraint "Don't have the same tracks at the same time" was not met.  
+Looks like I will need to enforce this a bit more through some extra "prompt engineering" (if possible). 
 
 
 ## Conclusion
