@@ -286,9 +286,8 @@ Looks like I will need to enforce this a bit more through some extra "prompt eng
 
 I'm afraid that using a one-shot GPT4 prompt with maximum 4K tokens will not work. 
 
-However dividing the requirements into multiple prompts will give a solution but still not respecting all constraints.
+On the other hand, dividing the requirements into several prompts can provide a solution, although it may not fully adhere to all constraints.
 
-However the suggested talk order based on the semantic meaning of a talksummary is an amazing feature to reuse within Optaplanner/
+Nonetheless, the proposed talk order based on the semantic analysis of talk summaries is an amazing feature that should be incorporated into OptaPlanner.
 
-It's clear that using a combination of both GPT and OptaPlanner is currently the way to go.
-
+It is evident that combining both GPT and OptaPlanner is presently the optimal approach (for now).
