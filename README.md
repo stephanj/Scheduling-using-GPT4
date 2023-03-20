@@ -88,7 +88,7 @@ MEDIUM CONSTRAINTS:
 5487;Spring Security: The Good Parts;INTERMEDIATE;This talk will teach you how to use Spring Security to secure your applications. You will learn about the library's architecture and how to use common abstraction patterns to make your code easier to read and maintain. You will also learn about the latest features in Spring Security 6.0.;Server Side Java;;;;Daniel Garnier-Moiroux
 ```
 
-## The prompt
+## One shot prompt approach
 
 ```
 The conference schedule in CSV format:
@@ -177,10 +177,147 @@ Creates new schedule slots AND TALKS which were not defined
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-4.png)
 
+
+## Chain prompting approach
+
+In this approach I have grouped all the talks per track and asked GPT to suggest an optimal order for the talks based on the semantic meaning of the title and summary columns.  
+
+In addition I've also asked to take in consideration the following soft constraints:
+1. Topic relevance: Try to arrange the talks in a logical order, where each talk builds on the knowledge and concepts presented in the previous talk. 
+2. Technical level: Considered the technical level of each talk (which is in the audienceLevel column)
+3. Variety: Considered the variety of topics covered in the talks. 
+
+The output per track was as follows :
+
+    Development Practices: 4367, 5259, 1411, 4914
+    UI & UX: 4506, 4921, 3872
+    Mind the Geek: 4372
+    Server Side Java: 4918, 4505, 5464, 5487
+    People & Culture: 4515
+    Architecture: 5251, 4947, 4521
+    Build & Deploy: 4913
+    Java: 4945, 4931, 4929, 5456, 5261
+    Security: 5298, 5268 
+
+This was generated using a python app src/schedular.py 
+
+You can run the python app as follows: 
+
+``` 
+   cd src
+```
+
+Store your OPENAI_API_KEY in an .env file under the src directory 
+
+``` 
+OPENAI_API_KEY="sk-........" 
+``` 
+
+``` 
+    cd src
+    pip3 install -r requirements    
+```    
+
+Of course it's better to use conda so you can isolate the dependencies
+
+``` 
+    conda create --name schedule
+    conda activate schedule
+```    
+
+now run the python app
+
+``` 
+ python3 schedular.py 
+```
+
+this will produce the following output:
+
+``` 
+---------------------------------------------------
+Development Practices : 
+
+Based on the factors mentioned, here is the suggested order for the talks:
+
+1. "Let's talk about software behaviour (BDD)" (id: 4367) - This talk is a good starting point as it covers a beginner-level topic and introduces a useful concept (BDD) that can be applied in software development.
+
+2. "Respect estimates" (id: 5259) - This talk builds on the previous one by discussing some of the common practices in software development and how they can be improved. It is still at a beginner level and provides some practical advice.
+
+3. "Unit Test Your Java Architecture With ArchUnit" (id: 1411) - This talk introduces a more technical topic (unit testing) and is relevant to the development practices track. It also builds on the previous talk by emphasizing the importance of good testing practices.
+
+4. "Monorepos - The Benefits, Challenges and Importance of Tooling Support" (id: 4914) - This talk is also relevant to the development practices track and introduces a more advanced topic (monorepos). It builds on the previous talk by discussing some of the challenges of managing large codebases and how monorepos can help.
+
+The suggested order is: 4367, 5259, 1411, 4914
+
+Therefore, the comma delimited list of talk ids is: 4367,5259,1411,4914
+
+...
+``` 
+
+For now, I manually took the suggested talks and copied them in a GPT-4 prompt:
+
+```
+Create me a conference schedule with following constraints: 
+1. HIGH CONSTRAINT: Respect the order of the talk ids.  First id needs to be scheduled first etc. 
+2. HIGH CONSTRAINT: Use the talk summary to decide which talks should follow each other 
+3. HIGH CONSTRAINT: Don't have the same tracks at the same time. 
+4. HIGH CONSTRAINT: A speaker can't speak at different rooms during the same time. 
+5. List the talk id, from/to schedule time, room name, track name 
+6. Only use the listed talks! 
+7. Use markdown to list the generated schedule 
+
+The schedule to populate is :
+
+"from hour";"to hour";"room name"
+"10:35";"11:20";Room 2 
+"10:35";"11:20";Room 8
+"10:35";"11:20";Room 7 
+"10:35";"11:20";Room 3
+"11:30";"12:15";Room 3
+"11:30";"12:15";Room 8
+"11:30";"12:15";Room 7
+"11:30";"12:15";Room 2
+"13:25";"14:10";Room 8
+"13:25";"14:10";Room 7
+"13:25";"14:10";Room 3
+"13:25";"14:10";Room 2
+"14:20";"15:05";Room 7
+"14:20";"15:05";Room 8
+"14:20";"15:05";Room 2
+"14:20";"15:05";Room 3
+"15:25";"16:10";Room 3
+"15:25";"16:10";Room 2
+"15:25";"16:10";Room 8
+"15:25";"16:10";Room 7
+"16:20";"17:05";Room 3
+"16:20";"17:05";Room 2
+"16:20";"17:05";Room 8
+"16:20";"17:05";Room 7
+
+The ordered talk ids per track:
+
+    # Development Practices: 4367, 5259, 1411, 4914
+    # UI & UX: 4506, 4921, 3872
+    # Mind the Geek: 4372
+    # Server Side Java: 4918, 4505, 5464, 5487
+    # People & Culture: 4515
+    # Architecture: 5251, 4947, 4521
+    # Build & Deploy: 4913
+    # Java: 4945, 4931, 4929, 5456, 5261
+    # Security: 5298, 5268 
+
+```
+
+The output was a very acceptable schedule as shown below.
+
+![Suggested schedule](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/gpt4-schedule.png)
+
+
 ## Conclusion
 
 I'm afraid that using a one-shot GPT4 prompt with maximum 4K tokens will not work. 
-However I'm convinced that the 8K and 32K token release will do the trick.
 
-To be continued.
+However creating dividing the requirements into multiple prompts will give an acceptable solution.
+
+Looking forward to see if this approach would work with a one shot prompt using the 8K or 32K version of GPT-4.
 
