@@ -285,7 +285,7 @@ The output was a very acceptable schedule as shown below.
 
 I'm afraid that using a one-shot GPT4 prompt with maximum 4K tokens will not work. 
 
-However creating dividing the requirements into multiple prompts will give an acceptable solution.
+However dividing the requirements into multiple prompts will give an acceptable solution.
 
 Looking forward to see if this approach would work with a one shot prompt using the 8K or 32K version of GPT-4.
 
