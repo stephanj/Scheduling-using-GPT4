@@ -180,7 +180,7 @@ Creates new schedule slots AND TALKS which were not defined
 
 ## Chained prompting approach
 
-In this approach I have grouped all the talks per track and asked GPT to suggest an optimal order for the talks based on the semantic meaning of the title and summary columns.  
+In this approach I have ***grouped all the talks per track*** and asked GPT per track to suggest an optimal order for the talks based on the semantic meaning of the talk.
 
 In addition I've also asked to take in consideration the following soft constraints:
 1. Topic relevance: Try to arrange the talks in a logical order, where each talk builds on the knowledge and concepts presented in the previous talk. 
