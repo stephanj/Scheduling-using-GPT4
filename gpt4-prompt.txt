@@ -1,0 +1,49 @@
+Create me a conference schedule with following constraints: 
+1. HIGH CONSTRAINT: Respect the order of the talk ids.  First id needs to be scheduled first etc. 
+2. HIGH CONSTRAINT: Use the talk summary to decide which talks should follow each other 
+3. HIGH CONSTRAINT: Don't have the same tracks at the same time. 
+4. HIGH CONSTRAINT: A speaker can't speak at different rooms during the same time. 
+5. List the talk id, from/to schedule time, room name, track name 
+6. Only use the listed talks! 
+7. Use markdown to list the generated schedule 
+
+The schedule to populate is :
+
+"from hour";"to hour";"room name"
+"10:35";"11:20";Room 2 
+"10:35";"11:20";Room 8
+"10:35";"11:20";Room 7 
+"10:35";"11:20";Room 3
+"11:30";"12:15";Room 3
+"11:30";"12:15";Room 8
+"11:30";"12:15";Room 7
+"11:30";"12:15";Room 2
+"13:25";"14:10";Room 8
+"13:25";"14:10";Room 7
+"13:25";"14:10";Room 3
+"13:25";"14:10";Room 2
+"14:20";"15:05";Room 7
+"14:20";"15:05";Room 8
+"14:20";"15:05";Room 2
+"14:20";"15:05";Room 3
+"15:25";"16:10";Room 3
+"15:25";"16:10";Room 2
+"15:25";"16:10";Room 8
+"15:25";"16:10";Room 7
+"16:20";"17:05";Room 3
+"16:20";"17:05";Room 2
+"16:20";"17:05";Room 8
+"16:20";"17:05";Room 7
+
+The ordered talk ids per track:
+
+    # Development Practices: 4367, 5259, 1411, 4914
+    # UI & UX: 4506, 4921, 3872
+    # Mind the Geek: 4372
+    # Server Side Java: 4918, 4505, 5464, 5487
+    # People & Culture: 4515
+    # Architecture: 5251, 4947, 4521
+    # Build & Deploy: 4913
+    # Java: 4945, 4931, 4929, 5456, 5261
+    # Security: 5298, 5268 
+
