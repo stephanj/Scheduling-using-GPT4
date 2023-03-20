@@ -283,7 +283,9 @@ Looks like I will need to enforce this a bit more through some extra "prompt eng
 
 ## Math approach
 
-Convert the info into a matrix which makes the info more compact and easier to play with.
+Convert the schedule info into a compact matrix representation. Easier to play with and less tokens.
+
+So let's take the tracks and "sorted" talk id's: 
 
 ```
     1. Development Practices: 4367, 5259, 1411, 4914
@@ -299,7 +301,7 @@ Convert the info into a matrix which makes the info more compact and easier to p
 
 Each track has it's own value, so 10 = Development Practices, 20 = UI & UX, etc. 
 
-We multiply the track id by 10,000 and add it to the talk id.
+We multiply the track id sequence by 10,000 and add it to the talk id.
 
 ```
 104367, 105259, 101411, 104914
