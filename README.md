@@ -179,5 +179,8 @@ Creates new schedule slots AND TALKS which were not defined
 
 ## Conclusion
 
-I'm afraid the 4K token version of GPT-4 will not work, waiting for the 8K and 32K token release.
+I'm afraid that using a one-shot GPT4 prompt with maximum 4K tokens will not work. 
+However I'm convinced that the 8K and 32K token release will do the trick.
+
+To be continued.
 
