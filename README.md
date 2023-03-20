@@ -1,4 +1,4 @@
-# Scheduling a conference using GPT-4
+# Scheduling a conference using GPT-4 (4K)
 
 Exploring if GPT-4 can generate a conference schedule using constraints.  ***For the moment without success*** 🥹
 
@@ -157,7 +157,7 @@ Create me a conference schedule with following constraints:
 7. Use markdown to list the generated schedule
 ```
 
-## The results
+## The results 
 
 ### Generation error
 
@@ -177,5 +177,7 @@ Creates new schedule slots AND TALKS which were not defined
 
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/error-output-4.png)
 
+## Conclusion
 
+I'm afraid the 4K token version of GPT-4 will not work, waiting for the 8K and 32K token release.
 
