@@ -262,15 +262,15 @@ The schedule to populate is :
 
 The ordered talk ids per track:
 
-    # Development Practices: 4367, 5259, 1411, 4914
-    # UI & UX: 4506, 4921, 3872
-    # Mind the Geek: 4372
-    # Server Side Java: 4918, 4505, 5464, 5487
-    # People & Culture: 4515
-    # Architecture: 5251, 4947, 4521
-    # Build & Deploy: 4913
-    # Java: 4945, 4931, 4929, 5456, 5261
-    # Security: 5298, 5268 
+    1. Development Practices: 4367, 5259, 1411, 4914
+    2. UI & UX: 4506, 4921, 3872
+    3. Mind the Geek: 4372
+    4. Server Side Java: 4918, 4505, 5464, 5487
+    5. People & Culture: 4515
+    6. Architecture: 5251, 4947, 4521
+    7. Build & Deploy: 4913
+    8. Java: 4945, 4931, 4929, 5456, 5261
+    9. Security: 5298, 5268 
 
 ```
 
@@ -281,13 +281,81 @@ At least now GPT4 created a schedule following the order of the talks per track.
 However I've noticed that the constraint "Don't have the same tracks at the same time" was not met.  
 Looks like I will need to enforce this a bit more through some extra "prompt engineering" (if possible). 
 
+## Math approach
+
+Convert the info into a matrix which makes the info more compact and easier to play with.
+
+```
+    1. Development Practices: 4367, 5259, 1411, 4914
+    2. UI & UX: 4506, 4921, 3872
+    3. Mind the Geek: 4372
+    4. Server Side Java: 4918, 4505, 5464, 5487
+    5. People & Culture: 4515
+    6. Architecture: 5251, 4947, 4521
+    7. Build & Deploy: 4913
+    8. Java: 4945, 4931, 4929, 5456, 5261
+    9. Security: 5298, 5268 
+```
+
+Each track has it's own value, so 10 = Development Practices, 20 = UI & UX, etc. 
+
+We multiply the track id by 10,000 and add it to the talk id.
+
+```
+104367, 105259, 101411, 104914
+204506, 204921, 203872
+304372
+404918, 404505, 405464, 405487
+504515
+605251, 604947, 604521
+704913
+804945, 804931, 804929, 805456, 805261
+905298, 905268 
+```
+
+We also order the tracks with the most talks first etc.
+
+```
+804945, 804931, 804929, 805456, 805261
+104367, 105259, 101411, 104914
+404918, 404505, 405464, 405487
+204506, 204921, 203872
+605251, 604947, 604521
+304372
+504515
+704913
+```
+BTW The order of the talk IDs are based on the semantic educational flow mentioned above.
+
+The json array that we'll now play with looks as follows
+
+```
+sortedTalks = [
+ {'sortedTalks': [804945, 804931, 804929, 805456, 805261]},  
+  {'sortedTalks' : [104367, 105259, 101411, 104914]},
+  {'sortedTalks' : [404918, 404505, 405464, 405487]},
+  {'sortedTalks' : [204506, 204921, 203872]},
+  {'sortedTalks' : [605251, 604947, 604521]},
+  {'sortedTalks' : [905298, 905268]},
+  {'sortedTalks' : [304372]},
+  {'sortedTalks' : [504515]},
+  {'sortedTalks' : [704913]}
+]
+```
+
+Using the following GPT prompt with a secret context (for now) we get the expected result:
+
+| Create a 6x4 matrix where each talk is listed in the order as they are provided per column. 
+| In each matrix row a talk id can not be from the same track.  
+
+
+![The schedule](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/perfectSchedule.jpeg)
+
 
 ## Conclusion
 
-I'm afraid that using a one-shot GPT4 prompt with maximum 4K tokens will not work. 
+It's unlikely that a one-shot GPT4 prompt will work, you need multiple steps/prompts.
 
-On the other hand, dividing the requirements into several prompts can provide a solution, although it may not fully adhere to all constraints.
+Dividing the requirements into several LLM calls can actually provide an acceptable solution!
 
-Nonetheless, the proposed talk order based on the semantic analysis of talk summaries is an amazing feature that should be incorporated into OptaPlanner.
-
-It is evident that combining both GPT and OptaPlanner is presently the optimal approach (for now).
+The proposed talk order based on the semantic analysis of talk summaries is an amazing feature. Combining this with OptaPlanner gives us the best of both worlds (for now).
