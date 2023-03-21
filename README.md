@@ -356,4 +356,4 @@ Generated the following "perfect" schedule 🥳
 
 The explained approach is a totally acceptable strategy for a one-day conference, especially with the "education flow" analysis of the talk summaries. However scaling this to multiple days (like Devoxx Belgium) with extra hard & soft constraints is a challenge which (for now) can only be accomplished with additional code. 
 
-The suggested talk order based on the semantic analysis of talk summaries is a great enhancement. Feeding this into OptaPlanner gives us ***the best of both worlds***.
+The suggested talk order by GPT (based on the semantic analysis of talk summaries) is a great enhancement. Feeding this into OptaPlanner gives us ***the best of both worlds***.
