@@ -1,6 +1,6 @@
 # Scheduling a conference using GPT-4 (4K)
 
-Exploring if GPT-4 can generate a conference schedule using constraints.  ***For the moment without success*** 🥹
+Exploring if GPT-4 can generate a conference schedule using constraints. 
 
 I've taken the public available [VoxxedDays Zurich](https://voxxeddays.com/zurich/schedule/) conference schedule details including the accepted talks.
 
