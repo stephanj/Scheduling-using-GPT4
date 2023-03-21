@@ -354,8 +354,6 @@ Generated the following "perfect" schedule 🥳
 
 ## Conclusion
 
-It's unlikely that a one-shot GPT4 prompt will work, you need multiple steps/prompts.
+The explained approach is a totally acceptable strategy for a one-day conference, especially with the "education flow" analysis of the talk summaries. However scaling this to multiple days (like Devoxx Belgium) with extra hard & soft constraints is a challenge which (for now) can only be accomplished with additional code. 
 
-Dividing the requirements into several LLM calls can actually provide an acceptable solution!
-
-The proposed talk order based on the semantic analysis of talk summaries is an amazing feature. Combining this with OptaPlanner gives us the best of both worlds (for now).
+The suggested talk order based on the semantic analysis of talk summaries is a great enhancement. Feeding this into OptaPlanner gives us ***the best of both worlds***.
