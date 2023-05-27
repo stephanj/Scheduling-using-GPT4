@@ -4,7 +4,10 @@ Investigating whether GPT-4 has the ability to generate a single-day conference 
 
 I've taken the public available [VoxxedDays Zurich](https://voxxeddays.com/zurich/schedule/) conference schedule details including the accepted talks.
 
+👉🏼 Published a [follow-up article](https://github.com/stephanj/Scheduling-using-GPT4-part-2) with a different (working) approach.
+
 ![Generation error](https://github.com/stephanj/Scheduling-using-GPT4/raw/master/assets/VoxxedDaysZurich.png)
+
 
 ## Current situation
 
@@ -357,3 +360,4 @@ Generated the following "perfect" schedule 🥳
 The explained approach is a totally acceptable strategy for a one-day conference, especially with the "education flow" analysis of the talk summaries. However scaling this to multiple days (like Devoxx Belgium) with extra hard & soft constraints is a challenge which (for now) can only be accomplished with additional code. 
 
 The suggested talk order by GPT (based on the semantic analysis of talk summaries) is a great enhancement. Feeding this into OptaPlanner gives us ***the best of both worlds***.
+
