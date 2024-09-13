@@ -363,7 +363,9 @@ The suggested talk order by GPT (based on the semantic analysis of talk summarie
 
 ## Addendum
 
-Tried with the brand new OpenAI o1-mini model, still no luck:
+Tried the same prompt with the brand new OpenAI o1-mini model, still no luck (13 Sept '24) :
+
+### Prompt response: 
 
 Below is the **Conference Schedule** organized to ensure a great educational flow, logical progression based on talk summaries, and adherence to all specified constraints.
 
