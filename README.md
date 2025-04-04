@@ -361,7 +361,7 @@ The explained approach is a totally acceptable strategy for a one-day conference
 
 The suggested talk order by GPT (based on the semantic analysis of talk summaries) is a great enhancement. Feeding this into OptaPlanner gives us ***the best of both worlds***.
 
-## Addendum
+## Addendum #1 (Sept '24)
 
 Tried the same prompt with the brand new OpenAI o1-mini model, still no luck (13 Sept '24) :
 
@@ -457,3 +457,222 @@ Below is the **Conference Schedule** organized to ensure a great educational flo
 
 This schedule ensures a balanced distribution of topics across all rooms and time slots, fostering an engaging and educational experience for all attendees.
 
+## Addendum #2 (Apr '25)
+
+I gave the same prompt to Google Gemini 2.5 Pro (reasoning) using https://aistudio.google.com and it returned a perfect schedule 😎🧠
+
+---
+Here's a breakdown of the thought process used to generate the conference schedule:
+
+1.  **Understand the Goal:** The primary goal is to create a valid conference schedule based on the provided room availability (schedule CSV) and talk details (talks CSV), adhering to several strict constraints. The output should be a markdown list detailing the schedule.
+
+2.  **Identify the Inputs:**
+    *   `schedule.csv`: Contains time slots and available rooms for each slot. Fields: "from hour", "to hour", "session type", "room name". All sessions are "Conference".
+    *   `talks.csv`: Contains details about each talk. Fields: "Talk ID", "Talk Title", "Audience Level", "Talk Sumamry", "Track Name", "Speaker Availability days", "Available from", "Available to", "Speaker names". Note that the availability fields are empty, so we assume all speakers are available for all slots unless constrained otherwise.
+
+3.  **Identify the Constraints:**
+    *   **Constraint 1: Educational Flow (HIGH):** Talks should follow a logical sequence based on their summaries. This is subjective but important. It means grouping similar topics or having introductory talks before advanced ones within a track or related tracks if possible.
+    *   **Constraint 2: Use Talk Summary for Flow (HIGH):** Reinforces Constraint 1. The content of the summary is key for deciding the order.
+    *   **Constraint 3: No Same Tracks at the Same Time (HIGH):** In any given time slot, the tracks being presented across *all* rooms must be unique.
+    *   **Constraint 4: Speaker Availability (HIGH):** A speaker cannot be in two places at once. (Although the input data doesn't show overlapping availability issues *per se*, this constraint ensures we don't assign the *same speaker* to two different talks in the *same time slot*).
+    *   **Constraint 5: Output Format:** List specific fields (ID, time, room, title, speaker, level, track) in markdown.
+    *   **Constraint 6: Use Only Listed Talks:** Don't invent talks.
+    *   **Constraint 7: Markdown Output:** Format the final schedule using markdown lists.
+
+4.  **Initial Data Processing & Analysis:**
+    *   **Parse Schedule CSV:** Extract unique time slots and the rooms available in each slot.
+        *   10:35-11:20: Room 2, Room 8, Room 7, Room 3 (4 rooms)
+        *   11:30-12:15: Room 3, Room 8, Room 7, Room 2 (4 rooms)
+        *   13:25-14:10: Room 8, Room 7, Room 3, Room 2 (4 rooms)
+        *   14:20-15:05: Room 7, Room 8, Room 2, Room 3 (4 rooms)
+        *   15:25-16:10: Room 3, Room 2, Room 8, Room 7 (4 rooms)
+        *   16:20-17:05: Room 3, Room 2, Room 8, Room 7 (4 rooms)
+        *   Total slots: 6. Total available talk slots: 6 * 4 = 24.
+    *   **Parse Talks CSV:** Extract talk details, focusing on ID, Title, Summary, Track, Speaker, and Level.
+        *   Count talks: There are 24 talks listed.
+        *   Identify Tracks: Development Practices, UI & UX, Mind the Geek, Server Side Java, People & Culture, Architecture, Build & Deploy, Java, Security. (9 unique tracks).
+        *   Identify Speakers: List unique speakers to easily check for conflicts (Constraint 4). (Roland Weisleder, Simon Martinelli, Katrin Rabow, Edoardo Vacchi, Alina Yurenko, Ruby Jane Cabagnot, Sven Peters, Anja Kunkel, Marit van Dijk, Juri Strumpflohner, Álvaro Sánchez-Mariscal, Jonas Bandi, Edson Yanaga, Piotr Przybyl, Ana-Maria Mihalceanu, Urs Enzler, Sheen Brisals, Jarek Ratajski, Mario Fusco, Rotem Refael, Jamie Coleman, Nicolai Parlog, Oliver Drotbohm, Daniel Garnier-Moiroux). All speakers seem unique to their talks in this list.
+    *   **Check Capacity:** 24 available slots and 24 talks. Perfect match. Every talk needs to be scheduled.
+
+5.  **Scheduling Strategy (Iterative & Constraint-Driven):** This is the core challenge. Since "Educational Flow" is subjective and high priority, it needs careful consideration alongside the strict "No Same Tracks" constraint.
+
+    *   **Step 1: Group by Track (Mental or Scratchpad):** Group talks by track to see potential flow within tracks.
+        *   *Development Practices:* 1411 (ArchUnit), 4367 (BDD), 4914 (Monorepos), 5259 (Estimates)
+        *   *UI & UX:* 3872 (Full-stack dead), 4506 (Qwik), 4921 (Reactivity Comparison)
+        *   *Mind the Geek:* 4372 (Wasm)
+        *   *Server Side Java:* 4505 (GraalVM Microservices), 4918 (Micronaut/GraalVM), 5464 (Spring Modulith), 5487 (Spring Security)
+        *   *People & Culture:* 4515 (Developer Joy)
+        *   *Architecture:* 4521 (Monolith->Microservices), 4947 (Evolutionary Arch), 5251 (Serverless Adoption)
+        *   *Build & Deploy:* 4913 (Dependencies)
+        *   *Java:* 4929 (Design Patterns Refactor), 4931 (Modern Java Features), 4945 (Performance Toolbox), 5261 (Loom), 5456 (Java Projects Amber/Loom etc.)
+        *   *Security:* 5268 (K8s Scan), 5298 (SBOMs)
+
+    *   **Step 2: Prioritize Tracks with Potential Flow:**
+        *   *Java:* Seems like a good candidate. 4945 (Perf Intro) -> 4931 (Modern Features) -> 4929 (Patterns Refactor) -> 5261 (Loom Adv) -> 5456 (Big Projects Adv). This is a potential sequence.
+        *   *Server Side Java:* 4918 (Micronaut Intro) -> 4505 (GraalVM Microservices) -> 5487 (Spring Security) -> 5464 (Spring Modulith Adv). Another potential sequence.
+        *   *Architecture:* 4947 (Evolutionary Arch) -> 5251 (Serverless) -> 4521 (Monolith->Micro).
+        *   *Development Practices:* 4367 (BDD Intro) -> 1411 (ArchUnit) -> 4914 (Monorepos) -> 5259 (Estimates Critique).
+        *   *UI & UX:* 4506 (Qwik Intro) -> 3872 (Full-stack) -> 4921 (Reactivity Compare).
+        *   *Security:* 5298 (SBOM Intro) -> 5268 (K8s Scan).
+
+    *   **Step 3: Start Filling Time Slots (Trial and Error):** This involves picking a time slot and assigning 4 talks, checking constraints.
+
+        *   **Slot 1 (10:35-11:20):** Need 4 *different* tracks. Let's try starting some sequences.
+            *   Room 2: 4367 (BDD - Dev Prac - BEGINNER) - Good start.
+            *   Room 8: 4506 (Qwik - UI/UX - BEGINNER) - Good start.
+            *   Room 7: 4945 (Java Perf - Java - BEGINNER) - Good start.
+            *   Room 3: 5298 (SBOM - Security - BEGINNER) - Good start.
+            *   *Check Constraints:* Tracks (Dev Prac, UI/UX, Java, Security) are unique. Speakers are unique. Flow seems okay (all beginner intros). OK.
+
+        *   **Slot 2 (11:30-12:15):** Need 4 different tracks, different from each other, and ideally continuing the flow.
+            *   Room 3: 1411 (ArchUnit - Dev Prac - BEGINNER) - Follows 4367 somewhat.
+            *   Room 8: 3872 (Full-stack - UI/UX - INTERMEDIATE) - Follows 4506.
+            *   Room 7: 4931 (Modern Java - Java - INTERMEDIATE) - Follows 4945.
+            *   Room 2: 4918 (Micronaut - Server Side Java - BEGINNER) - New track start.
+            *   *Check Constraints:* Tracks (Dev Prac, UI/UX, Java, Server Side Java) are unique. Speakers unique. Flow is maintained within tracks started in Slot 1, introduces Server Side Java. OK.
+
+        *   **Slot 3 (13:25-14:10):**
+            *   Room 8: 4914 (Monorepos - Dev Prac - BEGINNER) - Continues Dev Prac.
+            *   Room 7: 4921 (Reactivity - UI/UX - INTERMEDIATE) - Continues UI/UX.
+            *   Room 3: 4929 (Design Patterns - Java - INTERMEDIATE) - Continues Java.
+            *   Room 2: 4505 (GraalVM Microservices - Server Side Java - INTERMEDIATE) - Continues Server Side Java.
+            *   *Check Constraints:* Tracks (Dev Prac, UI/UX, Java, Server Side Java) unique. Speakers unique. Flow maintained. OK.
+
+        *   **Slot 4 (14:20-15:05):** Need 4 different tracks. What's left? Architecture, Build & Deploy, Mind the Geek, People & Culture, more Java, Server Side, Security, Dev Prac.
+            *   Room 7: 5259 (Estimates - Dev Prac - BEGINNER) - Finishes Dev Prac track.
+            *   Room 8: 5268 (K8s Scan - Security - BEGINNER) - Continues Security track.
+            *   Room 2: 5261 (Loom - Java - ADVANCED) - Continues Java track (advanced).
+            *   Room 3: 5487 (Spring Security - Server Side Java - INTERMEDIATE) - Continues Server Side Java.
+            *   *Check Constraints:* Tracks (Dev Prac, Security, Java, Server Side Java) unique. Speakers unique. Flow okay. OK.
+
+        *   **Slot 5 (15:25-16:10):** Need 4 different tracks. Remaining: Architecture (3), Build & Deploy (1), Mind the Geek (1), People & Culture (1), Java (1), Server Side Java (1). Need to pick 4.
+            *   Room 3: 4947 (Evolutionary Arch - Architecture - INTERMEDIATE) - Start Arch track.
+            *   Room 2: 4913 (Dependencies - Build & Deploy - BEGINNER) - Start B&D track.
+            *   Room 8: 5456 (Java Next - Java - ADVANCED) - Finishes Java track (advanced).
+            *   Room 7: 5464 (Spring Modulith - Server Side Java - ADVANCED) - Finishes Server Side Java track (advanced).
+            *   *Check Constraints:* Tracks (Architecture, Build & Deploy, Java, Server Side Java) unique. Speakers unique. Flow okay (finishing Java/Server Side, starting Arch/B&D). OK.
+
+        *   **Slot 6 (16:20-17:05):** Need 4 different tracks. Remaining: Architecture (2), Mind the Geek (1), People & Culture (1). Have 4 rooms. Perfect.
+            *   Room 3: 5251 (Serverless - Architecture - BEGINNER) - Continues Arch.
+            *   Room 2: 4521 (Monolith->Micro - Architecture - ADVANCED) - Continues Arch. *Wait!* Constraint 3: No same tracks at the same time. This doesn't work.
+
+        *   **Step 4: Backtrack & Adjust (Slot 5 & 6):** The issue arose because we ran out of diverse tracks for the last slots, forcing Architecture twice in Slot 6. Let's re-evaluate Slot 5.
+            *   *Alternative Slot 5 (15:25-16:10):* Let's spread out the remaining tracks better.
+                *   Room 3: 4947 (Evolutionary Arch - Architecture - INTERMEDIATE) - Start Arch.
+                *   Room 2: 4913 (Dependencies - Build & Deploy - BEGINNER) - Start B&D.
+                *   Room 8: 4372 (Wasm - Mind the Geek - INTERMEDIATE) - Start Mind the Geek.
+                *   Room 7: 4515 (Developer Joy - People & Culture - INTERMEDIATE) - Start People & Culture.
+                *   *Check Constraints:* Tracks (Arch, B&D, Mind the Geek, People & Culture) unique. Speakers unique. Flow okay (starts several single-talk tracks). OK.
+            *   *Try Slot 6 again (16:20-17:05):* Remaining: Architecture (2), Java (1), Server Side Java (1). We still need 4 *different* tracks. Ah, I miscounted what was left before. Let's re-list remaining talks after the *original* Slot 4:
+                *   Architecture: 4521, 4947, 5251
+                *   Build & Deploy: 4913
+                *   Mind the Geek: 4372
+                *   People & Culture: 4515
+                *   Java: 5456
+                *   Server Side Java: 5464
+                *   Total: 8 talks left for 8 slots (2 time slots * 4 rooms).
+            *   *Retry Slot 5 (15:25-16:10):* Need 4 different tracks from the 8 remaining.
+                *   Room 3: 4947 (Evolutionary Arch - Architecture - INTERMEDIATE)
+                *   Room 2: 4913 (Dependencies - Build & Deploy - BEGINNER)
+                *   Room 8: 5456 (Java Next - Java - ADVANCED) - Finishes Java track.
+                *   Room 7: 5464 (Spring Modulith - Server Side Java - ADVANCED) - Finishes Server Side Java track.
+                *   *Check Constraints:* Tracks (Arch, B&D, Java, Server Side Java) unique. Speakers unique. Flow okay. OK.
+            *   *Retry Slot 6 (16:20-17:05):* Remaining: Architecture (4521, 5251), Mind the Geek (4372), People & Culture (4515). Four talks, four rooms, three unique tracks. *Still doesn't work due to two Architecture talks.*
+
+        *   **Step 5: Major Re-evaluation:** The "No Same Track" constraint is hard, especially with multiple talks in the same track (Java has 5, Server Side Java has 4, Dev Prac has 4, Arch has 3, UI/UX has 3). It's mathematically difficult to avoid track collisions if you try to keep *all* talks of a popular track contiguous. The "Educational Flow" might need to be slightly less strict *within* a track (i.e., a track might be split across non-adjacent time slots) to satisfy the "No Same Track" constraint.
+
+        *   **Step 6: Re-attempt Scheduling with Relaxed Intra-Track Flow:** Let's prioritize avoiding track collisions *per slot*.
+            *   **Slot 1 (10:35-11:20):** (Keep previous attempt - seemed good)
+                *   Room 2: 4367 (BDD - Dev Prac - BEGINNER)
+                *   Room 8: 4506 (Qwik - UI/UX - BEGINNER)
+                *   Room 7: 4945 (Java Perf - Java - BEGINNER)
+                *   Room 3: 5298 (SBOM - Security - BEGINNER)
+                *   *Tracks: Dev Prac, UI/UX, Java, Security (OK)*
+
+            *   **Slot 2 (11:30-12:15):**
+                *   Room 3: 1411 (ArchUnit - Dev Prac - BEGINNER)
+                *   Room 8: 3872 (Full-stack - UI/UX - INTERMEDIATE)
+                *   Room 7: 4931 (Modern Java - Java - INTERMEDIATE)
+                *   Room 2: 4918 (Micronaut - Server Side Java - BEGINNER)
+                *   *Tracks: Dev Prac, UI/UX, Java, Server Side Java (OK)*
+
+            *   **Slot 3 (13:25-14:10):**
+                *   Room 8: 4914 (Monorepos - Dev Prac - BEGINNER)
+                *   Room 7: 4921 (Reactivity - UI/UX - INTERMEDIATE)
+                *   Room 3: 4929 (Design Patterns - Java - INTERMEDIATE)
+                *   Room 2: 4505 (GraalVM Microservices - Server Side Java - INTERMEDIATE)
+                *   *Tracks: Dev Prac, UI/UX, Java, Server Side Java (OK)*
+
+            *   **Slot 4 (14:20-15:05):** Need 4 different tracks. Available: Dev Prac(1), Java(2), ServerSide(2), Arch(3), Security(1), Build&Deploy(1), MindGeek(1), PeopleCulture(1).
+                *   Room 7: 5259 (Estimates - Dev Prac - BEGINNER)
+                *   Room 8: 5268 (K8s Scan - Security - BEGINNER)
+                *   Room 2: 4947 (Evolutionary Arch - Architecture - INTERMEDIATE) - Start Arch.
+                *   Room 3: 5487 (Spring Security - Server Side Java - INTERMEDIATE)
+                *   *Tracks: Dev Prac, Security, Arch, Server Side Java (OK)*
+
+            *   **Slot 5 (15:25-16:10):** Need 4 different tracks. Available: Java(2), ServerSide(1), Arch(2), Build&Deploy(1), MindGeek(1), PeopleCulture(1).
+                *   Room 3: 5261 (Loom - Java - ADVANCED)
+                *   Room 2: 5251 (Serverless - Architecture - BEGINNER)
+                *   Room 8: 4913 (Dependencies - Build & Deploy - BEGINNER)
+                *   Room 7: 4372 (Wasm - Mind the Geek - INTERMEDIATE)
+                *   *Tracks: Java, Arch, B&D, Mind the Geek (OK)*
+
+            *   **Slot 6 (16:20-17:05):** Need 4 different tracks. Available: Java(1 - 5456), ServerSide(1 - 5464), Arch(1 - 4521), PeopleCulture(1 - 4515). Perfect!
+                *   Room 3: 5456 (Java Next - Java - ADVANCED)
+                *   Room 2: 5464 (Spring Modulith - Server Side Java - ADVANCED)
+                *   Room 8: 4521 (Monolith->Micro - Architecture - ADVANCED)
+                *   Room 7: 4515 (Developer Joy - People & Culture - INTERMEDIATE)
+                *   *Tracks: Java, Server Side Java, Arch, People & Culture (OK)*
+
+    *   **Step 7: Final Review:** Check all constraints again for the generated schedule.
+        *   Flow: Seems reasonable. Beginner talks tend to be earlier. Tracks like Java, Dev Prac, UI/UX, Server Side Java have multiple sessions, somewhat spread out but often following each other logically (e.g., Java Perf -> Modern Java -> Design Patterns -> Loom -> Java Next; Micronaut -> GraalVM -> Spring Security -> Spring Modulith). It's a compromise, but better than violating the track constraint.
+        *   Track Collision: Double-checked each time slot; tracks are unique within each slot.
+        *   Speaker Conflict: All speakers only appear once, so no conflict.
+        *   All Talks Used: Yes, 24 talks scheduled.
+        *   Output Format: Need to format as markdown list with requested fields.
+
+6.  **Generate Markdown Output:** Go through the final schedule slot by slot, room by room, and format the output according to Constraint 5.
+---
+Suggested schedule:
+
+Okay, here is a possible conference schedule generated based on the provided data and constraints. The primary focus was ensuring no track conflicts within a time slot and maintaining a reasonable educational flow where possible, acknowledging that perfect flow might conflict with the track diversity constraint.
+
+```markdown
+**Conference Schedule**
+
+*   **10:35 - 11:20**
+    *   Room 2: (4367) Let's talk about software behaviour (BDD) - Katrin Rabow (BEGINNER, Development Practices)
+    *   Room 8: (4506) Resumability in the next generation frontend framework With O(1) loading time - Ruby Jane Cabagnot (BEGINNER, UI & UX)
+    *   Room 7: (4945) A Glance At The Java Performance Toolbox - Ana-Maria Mihalceanu (BEGINNER, Java)
+    *   Room 3: (5298) Why Building Your Ship (Application) with Raw Materials is a Bad Idea! - Jamie Coleman (BEGINNER, Security)
+
+*   **11:30 - 12:15**
+    *   Room 3: (1411) Unit Test Your Java Architecture With ArchUnit - Roland Weisleder (BEGINNER, Development Practices)
+    *   Room 8: (3872) Full-stack development is dead, long live full-stack development! - Simon Martinelli (INTERMEDIATE, UI & UX)
+    *   Room 7: (4931) Sailing Modern Java - Piotr Przybyl (INTERMEDIATE, Java)
+    *   Room 2: (4918) Unleash the power of your applications with Micronaut and GraalVM - Álvaro Sánchez-Mariscal (BEGINNER, Server Side Java)
+
+*   **13:25 - 14:10**
+    *   Room 8: (4914) Monorepos - The Benefits, Challenges and Importance of Tooling Support - Juri Strumpflohner (BEGINNER, Development Practices)
+    *   Room 7: (4921) From User Action to Framework Reaction: A comparison of the Reactivity Concepts in Angular, React, Vue and Svelte - Jonas Bandi (INTERMEDIATE, UI & UX)
+    *   Room 3: (4929) Revisiting Design Patterns after 20 - Edson Yanaga (INTERMEDIATE, Java)
+    *   Room 2: (4505) Awesome Java applications with GraalVM and Java microservices frameworks - Alina Yurenko (INTERMEDIATE, Server Side Java)
+
+*   **14:20 - 15:05**
+    *   Room 7: (5259) Respect estimates - Jarek Ratajski (BEGINNER, Development Practices)
+    *   Room 8: (5268) What We've Learned from Scanning 10K+ Kubernetes Clusters - Rotem Refael (BEGINNER, Security)
+    *   Room 2: (4947) Architecture aspects - evolutionary architecture development - Urs Enzler (INTERMEDIATE, Architecture)
+    *   Room 3: (5487) Spring Security: The Good Parts - Daniel Garnier-Moiroux (INTERMEDIATE, Server Side Java)
+
+*   **15:25 - 16:10**
+    *   Room 3: (5261) Game of Loom: implementation patterns and performance implications playing with virtual threads - Mario Fusco (ADVANCED, Java)
+    *   Room 2: (5251) Enterprise Serverless Adoption. An Experience Report - Sheen Brisals (BEGINNER, Architecture)
+    *   Room 8: (4913) Keep your dependencies in check - Marit van Dijk (BEGINNER, Build & Deploy)
+    *   Room 7: (4372) Wasmer Things: An Upside-Down Guide to WebAssembly - Edoardo Vacchi (INTERMEDIATE, Mind the Geek)
+
+*   **16:20 - 17:05**
+    *   Room 3: (5456) Java Next - From Amber to Loom, from Panama to Valhalla - Nicolai Parlog (ADVANCED, Java)
+    *   Room 2: (5464) Spring Modulith – Spring for the Architecturally Curious Developer - Oliver Drotbohm (ADVANCED, Server Side Java)
+    *   Room 8: (4521) The monolith must die! - How to convince managers - Anja Kunkel (ADVANCED, Architecture)
+    *   Room 7: (4515) Developer Joy – How great teams get s%*t done - Sven Peters (INTERMEDIATE, People & Culture)
+```
