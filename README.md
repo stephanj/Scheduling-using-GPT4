@@ -637,7 +637,6 @@ Suggested schedule:
 
 Okay, here is a possible conference schedule generated based on the provided data and constraints. The primary focus was ensuring no track conflicts within a time slot and maintaining a reasonable educational flow where possible, acknowledging that perfect flow might conflict with the track diversity constraint.
 
-```markdown
 **Conference Schedule**
 
 *   **10:35 - 11:20**
@@ -675,4 +674,3 @@ Okay, here is a possible conference schedule generated based on the provided dat
     *   Room 2: (5464) Spring Modulith – Spring for the Architecturally Curious Developer - Oliver Drotbohm (ADVANCED, Server Side Java)
     *   Room 8: (4521) The monolith must die! - How to convince managers - Anja Kunkel (ADVANCED, Architecture)
     *   Room 7: (4515) Developer Joy – How great teams get s%*t done - Sven Peters (INTERMEDIATE, People & Culture)
-```
