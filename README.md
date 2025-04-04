@@ -1,4 +1,4 @@
-# Scheduling a conference using GPT-4 (4K)
+# Scheduling a conference using LLM's
 
 Investigating whether GPT-4 has the ability to generate a single-day conference schedule that follows various constraints.
 
