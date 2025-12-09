@@ -1,4 +1,4 @@
-🔥 GAME OVER : See https://github.com/stephanj/conference-scheduling-skill 
+🔥 GAME OVER (Dec 2025) : See https://github.com/stephanj/conference-scheduling-skill 
 
 # Scheduling a conference using LLM's
 
